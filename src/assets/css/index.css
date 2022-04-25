@@ -1,0 +1,8 @@
+.liquidFillGaugeText {
+    font-family: Helvetica;
+    font-weight: bold;
+}
+.reservoir {
+    width: 20%;
+    float: left;
+}
