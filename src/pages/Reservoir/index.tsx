@@ -1,10 +1,9 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useReservoirList } from '@/api/useReservoirList';
 import LiquidFillGauge from 'react-liquid-gauge';
 import { useSearch } from 'react-location';
 import { LocationGenerics, Reservoir } from './type';
-import { Liquid, LiquidConfig } from '@ant-design/plots';
-
+import { LiquidConfig } from '@ant-design/plots';
 
 const ReservoirContent = () => {
     return (
@@ -18,7 +17,6 @@ const ReservoirContent = () => {
 const List = () => {
     const search = useSearch<LocationGenerics>();
     const { data = [] } = useReservoirList();
-    console.log('%c 🛶: List -> data ', 'font-size:16px;background-color:#1d7208;color:white;', data);
 
     return (
         <div id="content">
@@ -29,43 +27,58 @@ const List = () => {
     );
 };
 
-const Item: FC<{ reservoir: Reservoir }> = ({ reservoir }) => {   const roundTo = function(num: number, places: number) {
-  const factor = 10 ** places;
-  return Math.round(num * factor) / factor;
-};
-    const percent =  roundTo(reservoir.percentage/100,2);
+const Item: FC<{ reservoir: Reservoir }> = ({ reservoir }) => {
+    const roundTo = function (num: number, places: number) {
+        const factor = 10 ** places;
+        return Math.round(num * factor) / factor;
+    };
+    const percent = roundTo(reservoir.percentage / 100, 2);
     const colorConf = {
-        1: { circleColor: '#FF7777', textColor: '#FF4444', waveTextColor: '#FFAAAA', waveColor: '#FFDDDD' },
-        2: { circleColor: '#ffa077', textColor: '#ffa077', waveTextColor: '#ffa077', waveColor: '#f5976f7a' },
-        3: { circleColor: '#178BCA', textColor: '#045681', waveTextColor: '#A4DBf8', waveColor: '#178BCA' },
+        1: {
+            circleColor: '#FF7777',
+            textColor: '#FF4444',
+            waveTextColor: '#FFAAAA',
+            waveColor: '#FFDDDD',
+        },
+        2: {
+            circleColor: '#ffa077',
+            textColor: '#ffa077',
+            waveTextColor: '#ffa077',
+            waveColor: '#f5976f7a',
+        },
+        3: {
+            circleColor: '#178BCA',
+            textColor: '#045681',
+            waveTextColor: '#A4DBf8',
+            waveColor: '#178BCA',
+        },
     }[reservoir.percentage < 25 ? 1 : reservoir.percentage < 50 ? 2 : 3];
- 
 
-    const percentText =  roundTo(reservoir.percentage,2);
+    const percentText = roundTo(reservoir.percentage, 2);
     const config: LiquidConfig = {
-        percent:percent,
+        percent: percent,
         autoFit: false,
         width: 100,
         height: 100,
         color: colorConf.waveColor,
-        
+
         statistic: {
             title: false,
             content: {
-                style:{
-                    color:colorConf.textColor
+                style: {
+                    color: colorConf.textColor,
                 },
                 customHtml: () => {
                     return `<text class="text" transform="translate(0,0)" fill=${colorConf.textColor} font-family="Arial" style="text-anchor: middle;">
                     <tspan data-reactroot="">
                     <tspan style="font-size:18.75px">${percentText}</tspan>
-                    <tspan style="font-size:11.25px">%</tspan></tspan></text>`
-                }
-            } 
+                    <tspan style="font-size:11.25px">%</tspan></tspan></text>`;
+                },
+            },
         },
         outline: {
             style: {
-                stroke: colorConf.circleColor
+                stroke: colorConf.circleColor,
             },
             border: 4,
             distance: 2,
@@ -73,7 +86,7 @@ const Item: FC<{ reservoir: Reservoir }> = ({ reservoir }) => {   const roundTo 
         wave: {
             length: 128,
         },
-    }
+    };
 
     return (
         <div className="reservoir">
